@@ -2,42 +2,53 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/u_int8.hpp>
+#include <std_msgs/msg/u_int8_multi_array.hpp>
+#include <std_msgs/msg/u_int32_multi_array.hpp>
+#include <mutex>
 
 namespace nodes {
-    class IoNode : public rclcpp::Node {
-    public:
-        // Constructor
-        IoNode();
-        // Destructor (default)
-        ~IoNode() override = default;
+     class IoNode : public rclcpp::Node {
+     public:
+         // Constructor
+         IoNode();
 
 
-        // Function to retireve the last pressed button value
-        int get_button_pressed() const;
+         // Destructor (default)
+         ~IoNode() override = default;
 
-    private:
-        // Variable to store the last received button press value
-        int button_pressed_ = -1;
+         // Function to retrieve the last pressed button value
+         int get_button_pressed() const;
 
-        // Subscriber for button press messages
-        rclcpp::Subscription<std_msgs::msg::UInt8>::SharedPtr button_subscriber_;
-        rclcpp::Publisher<std_msgs::msg::UInt8>::SharedPtr led_publisher_;
+         void turn_on_leds(const std::vector<uint8_t>& values);
 
-        // Callback - preprocess received message
-        void on_button_callback(const std_msgs::msg::UInt8::SharedPtr msg)
-        {
-            button_pressed_= msg->data;
-            std::cout << "button_pressed_: " << button_pressed_ << std::endl;
-            //RCLCPP_INFO("Received: %f", msg->data);
-        }
+         void set_motor_speeds(const std::vector<uint8_t>& values);
 
-        void publish_message(float value_to_publish) {
-                auto msg = std_msgs::msg::UInt8();
-                msg.data = value_to_publish;
-                led_publisher_->publish(msg);
-                std::cout << "LED: " << value_to_publish << std::endl;
-                //RCLCPP_INFO(node_->get_logger(), "Published: %f", msg.data);
-            }
-    };
+         std::array<uint32_t, 2> get_encoder_values() const ;
 
-}
+     private:
+         // Variable to store the last received button press value
+         int button_pressed_ = -1;
+
+         std::array<uint32_t, 2> encoder_values_ = {0, 0};
+
+         mutable std::mutex encoder_mutex_;
+
+         std::vector<std_msgs::msg::UInt8::SharedPtr> rgb_values_ = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+         // Subscriber for button press messages
+         rclcpp::Subscription<std_msgs::msg::UInt8>::SharedPtr button_subscriber_;
+
+         rclcpp::Subscription<std_msgs::msg::UInt32MultiArray>::SharedPtr encoder_subscriber_;
+
+         rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr rgb_publisher_;
+
+         rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr motor_publisher_;
+
+         // Callback - preprocess received message
+         void on_button_callback(const std_msgs::msg::UInt8::SharedPtr msg);
+
+         void on_encoder_callback(const std_msgs::msg::UInt32MultiArray::SharedPtr msg);
+
+
+     };
+ }
