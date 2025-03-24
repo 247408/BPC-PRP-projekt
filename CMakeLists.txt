@@ -20,6 +20,8 @@ set(SRC
         include/helper.hpp
         src/nodes/LineNode.cpp
         include/nodes/LineNode.hpp
+        include/Loops/line_loop.hpp
+        src/Loops/line_loop.cpp
 )
 
 set(AMENT_LIBS rclcpp std_msgs sensor_msgs cv_bridge image_transport)

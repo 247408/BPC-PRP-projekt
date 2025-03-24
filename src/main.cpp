@@ -6,10 +6,10 @@
 
 int main(int argc, char* argv[]) {
     rclcpp::init(argc, argv);
-    auto node = std::make_shared<nodes::LineNode>();
-/*
-    auto executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
 
+    auto executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
+    auto node = std::make_shared<nodes::LineNode>();
+    /*
     auto io_node = std::make_shared<nodes::IoNode>();
 
     executor->add_node(io_node);
@@ -88,7 +88,6 @@ int main(int argc, char* argv[]) {
             }
         }
 */
-
 
     //executor->spin();
     rclcpp::spin(node);
