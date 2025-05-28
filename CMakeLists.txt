@@ -16,17 +16,32 @@ find_package(SDL2 REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
 set(SRC
+        src/example.cpp
+        include/nodes/io_node.hpp
         src/nodes/io_node.cpp
-        include/helper.hpp
-        src/nodes/LineNode.cpp
-        include/nodes/LineNode.hpp
-        include/Loops/line_loop.hpp
-        src/Loops/line_loop.cpp
+        include/nodes/motor.hpp
+        src/nodes/motor.cpp
+        include/nodes/kinematics_odometry.hpp
+        src/nodes/kinematics_odometry.cpp
+        include/nodes/line.hpp
+        src/nodes/line.cpp
+        include/nodes/button.hpp
+        src/nodes/button.cpp
+        src/nodes/lidar.cpp
+        include/nodes/lidar.hpp
+        src/nodes/imu_node.cpp
+        include/nodes/imu_node.hpp
+        include/nodes/planar_imu_integrator.hpp
+        src/nodes/planar_imu_integrator.cpp
+        src/nodes/pid.cpp
+        include/nodes/pid.hpp
+        src/nodes/camera.cpp
+        include/nodes/camera.hpp
 )
 
 set(AMENT_LIBS rclcpp std_msgs sensor_msgs cv_bridge image_transport)
 
-add_executable(${PROJECT_NAME} src/main.cpp ${SRC})
+add_executable(${PROJECT_NAME} src/main.cpp src/nodes/io_node.cpp src/nodes/motor.cpp src/nodes/kinematics_odometry.cpp ${SRC})
 target_include_directories(${PROJECT_NAME} PUBLIC
         include
         ${OpenCV_INCLUDE_DIRS}

@@ -1,2 +1,2 @@
-# BPC-PRP projekt
-Tento projekt je vyvijen v predmetu BPC-PRP
+# README
+add description of your project
